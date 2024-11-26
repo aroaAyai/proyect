@@ -1,0 +1,88 @@
+version: 2
+
+sources:
+  - name: bank
+    schema: bank
+    database: FIVETRAN_DATABASE
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 24, period: day}
+      error_after: {count: 48, period: day}
+
+    tables:
+      - name: account
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+          - name: account_type
+          - name: account_id
+          - name: last_activity
+          - name: balance
+          - name: overdraft_limit
+          - name: account_status
+          - name: customer_id
+          - name: date_opened
+          - name: _fivetran_synced
+
+      - name: customers
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+          - name: total_spent
+          - name: country
+          - name: registration_date
+          - name: gender
+          - name: date_of_birth
+          - name: is_vip
+          - name: name
+          - name: average_transaction
+          - name: phone_number
+          - name: customer_id
+          - name: email
+          - name: _fivetran_synced
+
+      - name: device
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+          - name: device_id
+          - name: device_type
+          - name: ip_address
+          - name: customer_id
+          - name: _fivetran_synced
+
+      - name: merchant
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+          - name: merchant_name
+          - name: merchant_location
+          - name: active_since
+          - name: merchant_id
+          - name: merchant_risk_score
+          - name: total_sales
+          - name: merchant_category
+          - name: _fivetran_synced
+
+      - name: transaction
+        loaded_at_field: _fivetran_synced
+        columns:
+          - name: _row
+          - name: transaction_id
+          - name: amount
+          - name: transaction_status
+          - name: device_id
+          - name: exchange_rate
+          - name: channel
+          - name: merchant_id
+          - name: transaction_type
+          - name: account_id
+          - name: currency
+          - name: merchant_rating
+          - name: timestamp
+          - name: _fivetran_synced
