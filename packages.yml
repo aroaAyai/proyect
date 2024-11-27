@@ -1,0 +1,15 @@
+packages:
+  - package: dbt-labs/codegen
+    version: 0.12.1
+
+  - package: dbt-labs/dbt_utils
+    version: 1.3.0
+    
+  - package: kgmcquate/testgen
+    version: 1.0.3
+
+  - package: calogica/dbt_expectations
+    version: 0.10.4
+    
+  - package: calogica/dbt_date
+    version: 0.10.1

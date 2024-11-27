@@ -1,0 +1,154 @@
+version: 2
+
+sources:
+  - name: bank
+    description: "Fuente de datos bancarios que contiene información sobre cuentas, clientes, dispositivos, transacciones, etc."
+    schema: bank
+    database: BANK_AROA_BRONZE
+
+    freshness:
+      warn_after: { count: 24, period: day }
+      error_after: { count: 48, period: day }
+
+    tables:
+      - name: account
+        description: "Información sobre las cuentas bancarias de los clientes, incluyendo tipo de cuenta, saldo, límite de descubierto, etc."
+        columns:
+          - name: account_type
+            description: "Tipo de cuenta (e.g., corriente, ahorro)."
+          - name: account_id
+            description: "ID único de la cuenta bancaria."
+          - name: last_activity
+            description: "Fecha y hora de la última actividad en la cuenta."
+          - name: balance
+            description: "Saldo actual de la cuenta."
+          - name: overdraft_limit
+            description: "Límite de descubierto de la cuenta, si aplica."
+          - name: account_status
+            description: "Estado de la cuenta (e.g., activa, cerrada)."
+          - name: customer_id
+            description: "ID del cliente asociado a la cuenta."
+          - name: date_opened
+            description: "Fecha en que se abrió la cuenta."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
+
+      - name: customers
+        description: "Información sobre los clientes del banco, incluyendo datos demográficos y comportamiento de gasto."
+        columns:
+          - name: _row
+            description: "ID interno de la fila del cliente."
+          - name: total_spent
+            description: "Monto total gastado por el cliente."
+          - name: country
+            description: "País de residencia del cliente."
+          - name: registration_date
+            description: "Fecha de registro del cliente en el sistema."
+          - name: gender
+            description: "Género del cliente."
+          - name: date_of_birth
+            description: "Fecha de nacimiento del cliente."
+          - name: is_vip
+            description: "Indica si el cliente es VIP (Sí/No)."
+          - name: name
+            description: "Nombre completo del cliente."
+          - name: average_transaction
+            description: "Promedio de transacciones realizadas por el cliente."
+          - name: phone_number
+            description: "Número de teléfono del cliente."
+          - name: customer_id
+            description: "ID único del cliente."
+          - name: email
+            description: "Correo electrónico del cliente."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
+
+      - name: device
+        description: "Información sobre los dispositivos asociados a los clientes."
+        columns:
+          - name: _row
+            description: "ID interno de la fila del dispositivo."
+          - name: device_id
+            description: "ID único del dispositivo."
+          - name: device_type
+            description: "Tipo de dispositivo (e.g., móvil, PC)."
+          - name: ip_address
+            description: "Dirección IP asociada al dispositivo."
+          - name: customer_id
+            description: "ID del cliente asociado al dispositivo."
+          - name: geo_id
+            description: "ID de geolocalización del dispositivo."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
+
+      - name: geolocation
+        description: "Información geográfica asociada a los dispositivos, incluyendo si es un proxy."
+        columns:
+          - name: _row
+            description: "ID interno de la fila de geolocalización."
+          - name: country
+            description: "País desde el que se accede al dispositivo."
+          - name: city
+            description: "Ciudad desde la que se accede al dispositivo."
+          - name: is_proxy
+            description: "Indica si la conexión proviene de un servidor proxy."
+          - name: geo_id
+            description: "ID único de geolocalización."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
+
+      - name: merchant
+        description: "Información sobre los comerciantes, incluyendo el riesgo y las ventas."
+        columns:
+          - name: _row
+            description: "ID interno de la fila del comerciante."
+          - name: average_sale
+            description: "Promedio de ventas realizadas por el comerciante."
+          - name: merchant_name
+            description: "Nombre del comerciante."
+          - name: active_since
+            description: "Fecha de inicio de actividad del comerciante."
+          - name: merchant_id
+            description: "ID único del comerciante."
+          - name: merchant_risk_score
+            description: "Puntuación de riesgo del comerciante."
+          - name: total_sales
+            description: "Ventas totales realizadas por el comerciante."
+          - name: merchant_category
+            description: "Categoría del comerciante (e.g., tecnología, ropa)."
+          - name: geo_id
+            description: "ID de geolocalización del comerciante."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
+
+      - name: transaction
+        description: "Información de las transacciones bancarias, incluyendo monto, estado, tipo, etc."
+        columns:
+          - name: _row
+            description: "ID interno de la fila de la transacción."
+          - name: transaction_id
+            description: "ID único de la transacción."
+          - name: amount
+            description: "Monto de la transacción."
+          - name: transaction_status
+            description: "Estado de la transacción (completada, fallida, pendiente)."
+          - name: device_id
+            description: "ID del dispositivo utilizado para la transacción."
+          - name: exchange_rate
+            description: "Tipo de cambio utilizado en la transacción (si aplica)."
+          - name: channel
+            description: "Canal utilizado para la transacción (e.g., en línea, presencial)."
+          - name: merchant_id
+            description: "ID del comerciante donde se realizó la transacción."
+          - name: transaction_type
+            description: "Tipo de transacción (e.g., compra, reembolso)."
+          - name: account_id
+            description: "ID de la cuenta asociada con la transacción."
+          - name: currency
+            description: "Moneda utilizada para la transacción."
+          - name: merchant_rating
+            description: "Puntuación del comerciante para la transacción."
+          - name: timestamp
+            description: "Fecha y hora en que ocurrió la transacción."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
