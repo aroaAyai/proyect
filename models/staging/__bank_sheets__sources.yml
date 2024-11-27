@@ -18,98 +18,150 @@ sources:
             description: "Tipo de cuenta (e.g., corriente, ahorro)."
           - name: account_id
             description: "ID único de la cuenta bancaria."
+            tests:
+              - unique
+              - not_null
           - name: last_activity
             description: "Fecha y hora de la última actividad en la cuenta."
+            tests:
+              - not_null
           - name: balance
             description: "Saldo actual de la cuenta."
+            tests:
+              - not_null
+              - positive_values
           - name: overdraft_limit
             description: "Límite de descubierto de la cuenta, si aplica."
           - name: account_status
             description: "Estado de la cuenta (e.g., activa, cerrada)."
+            tests:
+              - not_null
           - name: customer_id
             description: "ID del cliente asociado a la cuenta."
+            tests:
+              - not_null
           - name: date_opened
             description: "Fecha en que se abrió la cuenta."
+            tests:
+              - not_null
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
 
       - name: customers
         description: "Información sobre los clientes del banco, incluyendo datos demográficos y comportamiento de gasto."
         columns:
-          - name: _row
-            description: "ID interno de la fila del cliente."
           - name: total_spent
             description: "Monto total gastado por el cliente."
+            tests:
+              - not_null
           - name: country
             description: "País de residencia del cliente."
+            tests:
+              - not_null
           - name: registration_date
             description: "Fecha de registro del cliente en el sistema."
+            tests:
+              - not_null
           - name: gender
             description: "Género del cliente."
           - name: date_of_birth
             description: "Fecha de nacimiento del cliente."
+            tests:
+              - not_null
           - name: is_vip
             description: "Indica si el cliente es VIP (Sí/No)."
           - name: name
             description: "Nombre completo del cliente."
+            tests:
+              - not_null
           - name: average_transaction
             description: "Promedio de transacciones realizadas por el cliente."
           - name: phone_number
             description: "Número de teléfono del cliente."
+            tests:
+              - not_null
           - name: customer_id
             description: "ID único del cliente."
+            tests:
+              - unique
+              - not_null
           - name: email
             description: "Correo electrónico del cliente."
+            tests:
+              - not_null
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
+              - unique
+              - test_valid_email
 
       - name: device
         description: "Información sobre los dispositivos asociados a los clientes."
         columns:
-          - name: _row
-            description: "ID interno de la fila del dispositivo."
           - name: device_id
             description: "ID único del dispositivo."
+            tests:
+              - unique
+              - not_null
           - name: device_type
             description: "Tipo de dispositivo (e.g., móvil, PC)."
+            tests:
+              - not_null
           - name: ip_address
             description: "Dirección IP asociada al dispositivo."
           - name: customer_id
             description: "ID del cliente asociado al dispositivo."
+            tests:
+              - not_null
           - name: geo_id
             description: "ID de geolocalización del dispositivo."
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
 
       - name: geolocation
         description: "Información geográfica asociada a los dispositivos, incluyendo si es un proxy."
         columns:
-          - name: _row
-            description: "ID interno de la fila de geolocalización."
           - name: country
             description: "País desde el que se accede al dispositivo."
+            tests:
+              - not_null
           - name: city
             description: "Ciudad desde la que se accede al dispositivo."
           - name: is_proxy
             description: "Indica si la conexión proviene de un servidor proxy."
           - name: geo_id
             description: "ID único de geolocalización."
+            tests:
+              - unique
+              - not_null
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
 
       - name: merchant
         description: "Información sobre los comerciantes, incluyendo el riesgo y las ventas."
         columns:
-          - name: _row
-            description: "ID interno de la fila del comerciante."
           - name: average_sale
             description: "Promedio de ventas realizadas por el comerciante."
           - name: merchant_name
             description: "Nombre del comerciante."
+            tests:
+              - not_null
           - name: active_since
             description: "Fecha de inicio de actividad del comerciante."
+            tests:
+              - not_null
           - name: merchant_id
             description: "ID único del comerciante."
+            tests:
+              - unique
+              - not_null
           - name: merchant_risk_score
             description: "Puntuación de riesgo del comerciante."
           - name: total_sales
@@ -120,18 +172,26 @@ sources:
             description: "ID de geolocalización del comerciante."
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
 
       - name: transaction
         description: "Información de las transacciones bancarias, incluyendo monto, estado, tipo, etc."
         columns:
-          - name: _row
-            description: "ID interno de la fila de la transacción."
           - name: transaction_id
             description: "ID único de la transacción."
+            tests:
+              - unique
+              - not_null
           - name: amount
             description: "Monto de la transacción."
+            tests:
+              - not_null
+              - positive_values
           - name: transaction_status
             description: "Estado de la transacción (completada, fallida, pendiente)."
+            tests:
+              - not_null
           - name: device_id
             description: "ID del dispositivo utilizado para la transacción."
           - name: exchange_rate
@@ -150,5 +210,9 @@ sources:
             description: "Puntuación del comerciante para la transacción."
           - name: timestamp
             description: "Fecha y hora en que ocurrió la transacción."
+            tests:
+              - not_null
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
