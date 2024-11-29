@@ -1,27 +1,25 @@
 {{ config(
     materialized='incremental',
-    unique_key='account_id'
+    unique_key='merchant_id'
 ) }}
 
 with 
 source as (
     select * 
-    from {{ source('bank', 'account') }}
+    from {{ source('bank','merchant') }} 
 ),
 
 renamed as (
     select
-        account_id,
-        account_type,
-        date_opened,
-        account_status,
-        customer_id,
-        overdraft_limit,
-        balance,
-        last_activity,
+        merchant_id,
+        merchant_name,
+        merchant_category,
+        merchant_risk_score,
+        geo_id,
+        average_sale,
         CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload 
     from source
-    order by account_id asc
+    order by merchant_id asc
 )
 
 select * 

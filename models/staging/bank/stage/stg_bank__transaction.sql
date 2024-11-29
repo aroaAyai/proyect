@@ -6,7 +6,7 @@
 with 
 source as (
     select * 
-    from {{ source('bank', 'transaction') }}  -- Fuentes de datos de la tabla de transacciones
+    from {{ ref('base_transaction') }} 
 ),
 
 renamed as (

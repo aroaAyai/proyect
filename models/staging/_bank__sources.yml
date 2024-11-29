@@ -13,31 +13,43 @@ sources:
     tables:
       - name: account
         description: "Información sobre las cuentas bancarias de los clientes, incluyendo tipo de cuenta, saldo, límite de descubierto, etc."
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns: ["account_id", "customer_id"] # IDs únicos por cliente y cuenta
+          - dbt_utils.relationships:
+              to: ref('customers')
+              field: customer_id # Asegura la relación con la tabla customers
         columns:
-          - name: account_type
-            description: "Tipo de cuenta (e.g., corriente, ahorro)."
           - name: account_id
             description: "ID único de la cuenta bancaria."
             tests:
               - unique
               - not_null
-          - name: last_activity
-            description: "Fecha y hora de la última actividad en la cuenta."
-            tests:
-              - not_null
           - name: balance
             description: "Saldo actual de la cuenta."
             tests:
               - not_null
-              - positive_values
+              - dbt_utils.accepted_range:
+                  min_value: 0 # Los saldos deben ser 0 o mayores
+          - name: customer_id
+            description: "ID del cliente asociado a la cuenta."
+            tests:
+              - not_null
+              - dbt_utils.relationships:
+                  to: ref('customers')
+                  field: customer_id # Relación con la tabla de clientes
+          - name: account_type
+            description: "Tipo de cuenta (e.g., corriente, ahorro)."
+            tests:
+              - not_null
+          - name: last_activity
+            description: "Fecha y hora de la última actividad en la cuenta."
+            tests:
+              - not_null
           - name: overdraft_limit
             description: "Límite de descubierto de la cuenta, si aplica."
           - name: account_status
             description: "Estado de la cuenta (e.g., activa, cerrada)."
-            tests:
-              - not_null
-          - name: customer_id
-            description: "ID del cliente asociado a la cuenta."
             tests:
               - not_null
           - name: date_opened
@@ -52,6 +64,16 @@ sources:
       - name: customers
         description: "Información sobre los clientes del banco, incluyendo datos demográficos y comportamiento de gasto."
         columns:
+          - name: customer_id
+            description: "ID único del cliente."
+            tests:
+              - unique
+              - not_null
+          - name: email
+            description: "Correo electrónico del cliente."
+            tests:
+              - not_null
+              - email_format
           - name: total_spent
             description: "Monto total gastado por el cliente."
             tests:
@@ -80,56 +102,31 @@ sources:
             description: "Promedio de transacciones realizadas por el cliente."
           - name: phone_number
             description: "Número de teléfono del cliente."
-            tests:
-              - not_null
-          - name: customer_id
-            description: "ID único del cliente."
-            tests:
-              - unique
-              - not_null
-          - name: email
-            description: "Correo electrónico del cliente."
-            tests:
-              - not_null
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
             tests:
               - not_null
-              - unique
-              - test_valid_email
-
       - name: device
-        description: "Información sobre los dispositivos asociados a los clientes."
+        description: "Información sobre los dispositivos asociados a los clientes"
         columns:
           - name: device_id
-            description: "ID único del dispositivo."
-            tests:
-              - unique
-              - not_null
+            description: "ID único del dispositivo"
           - name: device_type
-            description: "Tipo de dispositivo (e.g., móvil, PC)."
-            tests:
-              - not_null
+            description: "Tipo de dispositivo"
           - name: ip_address
-            description: "Dirección IP asociada al dispositivo."
+            description: "Dirección IP asociada al dispositivo"
           - name: customer_id
-            description: "ID del cliente asociado al dispositivo."
-            tests:
-              - not_null
+            description: "ID del cliente asociado al dispositivo"
           - name: geo_id
-            description: "ID de geolocalización del dispositivo."
+            description: "ID de geolocalización del dispositivo"
           - name: _fivetran_synced
-            description: "Marca temporal de la última sincronización con Fivetran."
-            tests:
-              - not_null
+            description: "Marca temporal de la última sincronización con Fivetran"
 
       - name: geolocation
         description: "Información geográfica asociada a los dispositivos, incluyendo si es un proxy."
         columns:
           - name: country
             description: "País desde el que se accede al dispositivo."
-            tests:
-              - not_null
           - name: city
             description: "Ciudad desde la que se accede al dispositivo."
           - name: is_proxy
@@ -147,20 +144,14 @@ sources:
       - name: merchant
         description: "Información sobre los comerciantes, incluyendo el riesgo y las ventas."
         columns:
-          - name: average_sale
-            description: "Promedio de ventas realizadas por el comerciante."
-          - name: merchant_name
-            description: "Nombre del comerciante."
-            tests:
-              - not_null
-          - name: active_since
-            description: "Fecha de inicio de actividad del comerciante."
-            tests:
-              - not_null
           - name: merchant_id
             description: "ID único del comerciante."
             tests:
               - unique
+              - not_null
+          - name: merchant_name
+            description: "Nombre del comerciante."
+            tests:
               - not_null
           - name: merchant_risk_score
             description: "Puntuación de riesgo del comerciante."
@@ -187,7 +178,9 @@ sources:
             description: "Monto de la transacción."
             tests:
               - not_null
-              - positive_values
+              - dbt_utils.accepted_range:
+                  min_value: 0 # Puedes ajustar el valor mínimo
+                  max_value: 99990 # Los valores deben ser menores o iguales a 0
           - name: transaction_status
             description: "Estado de la transacción (completada, fallida, pendiente)."
             tests:

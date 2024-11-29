@@ -1,0 +1,127 @@
+version: 2
+
+models:
+  # Modelo base_account
+  - name: base_account
+    description: "Información sobre las cuentas bancarias"
+    columns:
+      - name: account_id
+        description: "ID único de la cuenta"
+      - name: account_status
+        description: "Estado de la cuenta (Ej. Activa, Suspendida)"
+      - name: account_type
+        description: "Tipo de cuenta (Ej. Corriente, Ahorros)"
+      - name: date_opened
+        description: "Fecha de apertura de la cuenta"
+      - name: overdraft_limit
+        description: "Límite de sobregiro de la cuenta"
+      - name: balance
+        description: "Saldo de la cuenta"
+      - name: last_activity
+        description: "Última actividad registrada de la cuenta"
+      - name: _fivetran_synced
+        description: "Marca de sincronización de Fivetran"
+
+  # Modelo base_device
+  - name: base_device
+    description: "Información sobre los dispositivos utilizados por los clientes"
+    columns:
+      - name: device_id
+        description: "ID único del dispositivo"
+      - name: device_type
+        description: "Tipo de dispositivo (Ej. Móvil, PC)"
+      - name: ip_address
+        description: "Dirección IP asociada al dispositivo"
+      - name: customer_id
+        description: "ID del cliente asociado al dispositivo"
+      - name: geo_id
+        description: "ID geográfico asociado al dispositivo"
+      - name: _fivetran_synced
+        description: "Marca de sincronización de Fivetran"
+
+  # Modelo base_geolocation
+  - name: base_geolocation
+    description: "Información geográfica relacionada con los dispositivos y clientes"
+    columns:
+      - name: geo_id
+        description: "ID único de geolocalización"
+      - name: country
+        description: "País asociado con la geolocalización"
+      - name: city
+        description: "Ciudad asociada con la geolocalización"
+      - name: is_proxy
+        description: "Indica si la ubicación está siendo mascarada por un proxy"
+      - name: _fivetran_synced
+        description: "Marca de sincronización de Fivetran"
+
+  # Modelo base_customer
+  - name: base_customer
+    description: "Información de los clientes"
+    columns:
+      - name: customer_id
+        description: "ID único del cliente"
+      - name: name
+        description: "Nombre del cliente"
+      - name: country
+        description: "País de residencia del cliente"
+      - name: gender
+        description: "Género del cliente"
+      - name: phone_number
+        description: "Número de teléfono del cliente"
+      - name: is_vip
+        description: "Indica si el cliente es VIP"
+      - name: registration_date
+        description: "Fecha de registro del cliente"
+      - name: total_spent
+        description: "Monto total gastado por el cliente"
+      - name: date_of_birth
+        description: "Fecha de nacimiento del cliente"
+      - name: _fivetran_synced
+        description: "Marca de sincronización de Fivetran"
+
+  # Modelo base_merchant
+  - name: base_merchant
+    description: "Información de los comercios asociados"
+    columns:
+      - name: merchant_id
+        description: "ID único del comercio"
+      - name: merchant_name
+        description: "Nombre del comercio"
+      - name: merchant_category
+        description: "Categoría del comercio (Ej. Retail, Electrónica)"
+      - name: merchant_risk_score
+        description: "Puntuación de riesgo del comercio"
+      - name: geo_id
+        description: "ID geográfico asociado al comercio"
+      - name: average_sale
+        description: "Monto promedio de venta del comercio"
+      - name: _fivetran_synced
+        description: "Marca de sincronización de Fivetran"
+
+  # Modelo base_transaction
+  - name: base_transaction
+    description: "Información sobre las transacciones bancarias"
+    columns:
+      - name: transaction_id
+        description: "ID único de la transacción"
+      - name: account_id
+        description: "ID de la cuenta asociada a la transacción"
+      - name: merchant_id
+        description: "ID del comercio asociado a la transacción"
+      - name: device_id
+        description: "ID del dispositivo usado para la transacción"
+      - name: transaction_type
+        description: "Tipo de transacción (Ej. Compra, Transferencia)"
+      - name: amount
+        description: "Monto de la transacción"
+      - name: currency
+        description: "Moneda usada en la transacción"
+      - name: channel
+        description: "Canal de la transacción (Ej. Web, App)"
+      - name: transaction_status
+        description: "Estado de la transacción (Ej. Completada, Pendiente)"
+      - name: timestamp
+        description: "Marca temporal de la transacción"
+      - name: _fivetran_synced
+        description: "Marca de sincronización de Fivetran"
+

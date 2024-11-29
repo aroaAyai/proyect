@@ -6,7 +6,7 @@
 with 
 source as (
     select * 
-    from {{ source('bank', 'geolocation') }}
+    from {{ source('bank','geolocation') }} 
 ),
 
 renamed as (
@@ -15,7 +15,7 @@ renamed as (
         country,
         city,
         is_proxy,
-        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload 
+        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload
     from source
     order by geo_id asc
 )
@@ -24,5 +24,5 @@ select *
 from renamed
 
 {% if is_incremental() %}
-    WHERE datetime_load_utc > (SELECT MAX(datetime_load_utc) FROM {{ this }})
+    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})
 {% endif %}
