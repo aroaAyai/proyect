@@ -3,37 +3,54 @@
     unique_key='account_id'
 ) }}
 
-with 
-source as (
-    select * 
-    from {{ ref('base_account') }} 
+WITH source AS (
+    SELECT * 
+    FROM {{ ref('base_account') }} 
 ),
 
-cleaned as (
-    select 
+cleaned AS (
+    SELECT 
         account_id,
-        lower(account_status) as account_status, 
-        lower(account_type) as account_type,  
+        CASE 
+            WHEN account_status IS NULL THEN 'inactiva'
+            ELSE lower(account_status)  
+        END AS account_status,
+        
+        CASE 
+            WHEN account_type IS NULL THEN 'corriente'
+            WHEN lower(account_type) = 'corriente' THEN 'corriente' 
+            ELSE lower(account_type)  
+        END AS account_type,
+        
         date_opened,
-        cast(round(overdraft_limit) as int) as overdraft_limit, 
-        cast(round(balance) as int) as balance, 
+        
+        CAST(ROUND(overdraft_limit) AS INT) AS overdraft_limit, 
+        
+        CASE 
+            WHEN balance IS NULL THEN 0 
+            WHEN balance = 0 THEN 0 
+            ELSE CAST(ROUND(balance) AS INT)  
+        END AS balance,
+        
         last_activity,
-        datediff('day', last_activity, '2025-01-01') as days_since_last_activity,
-        case 
-            when round(balance) > 3000 then 'high'
-            when round(balance) > 500 then 'medium'
-            else 'low'
-        end as balance_category,
+        
+        DATEDIFF('day', last_activity, '2025-01-01') AS days_since_last_activity,
+        
+        CASE 
+            WHEN ROUND(balance) > 3000 THEN 'high'
+            WHEN ROUND(balance) > 500 THEN 'medium'
+            ELSE 'low'
+        END AS balance_category,
+        
         dateload
-    from source
-    where round(balance) >= 0
-        and date_opened <= '2025-01-01'
-
+    FROM source
+    WHERE ROUND(balance) >= 0
+        AND date_opened <= '2025-01-01'
 )
 
-select * 
-from cleaned
+SELECT * 
+FROM cleaned
 
 {% if is_incremental() %}
-    where dateload > (select max(dateload) from {{ this }})
+    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})
 {% endif %}
