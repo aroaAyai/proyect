@@ -1,15 +1,11 @@
-{{ config(
-    materialized='incremental',
-    unique_key='transaction_id'
-) }}
-
-WITH source AS (
-    SELECT * 
-    FROM {{ source('bank', 'transaction') }}
+with 
+source as (
+    select * 
+    from {{ source('bank', 'transaction') }}
 ),
 
-renamed AS (
-    SELECT
+renamed as (
+    select
         transaction_id,
         account_id, 
         merchant_id, 
@@ -17,29 +13,36 @@ renamed AS (
         transaction_type, 
         amount,
         currency,
-        channel,  
-        transaction_status, 
-        timestamp,
-        -- Convertimos la zona horaria de sincronización
+        CASE 
+            WHEN channel IS NULL THEN 'Online' 
+            ELSE channel  
+        END AS channel, 
+        CASE 
+            WHEN transaction_status IS NULL THEN 'No aceptada' 
+            ELSE transaction_status  
+        END AS transaction_status,
         CONVERT_TIMEZONE('UTC', _fivetran_synced) AS dateload, 
-        -- Normalización de montos
-        CAST(amount AS DECIMAL(10, 2)) AS normalized_amount,
-        -- Categorización del monto
-        CASE
-            WHEN amount < 100 THEN 'Low'
-            WHEN amount BETWEEN 100 AND 500 THEN 'Medium'
-            ELSE 'High'
-        END AS amount_category,
-        -- Cálculo de días desde la última transacción
-        DATEDIFF('day', timestamp, CURRENT_DATE) AS days_since_transaction
-    FROM source
-    WHERE amount >= 0  -- Filtramos montos negativos
-),
+    from source
+    order by transaction_id asc
+)
 
--- El resultado final
-SELECT * 
-FROM renamed
+select 
+    transaction_id,
+    account_id,
+    merchant_id,
+    device_id,
+    transaction_type,
+    amount as amount_usd,
+    ROUND(CASE
+        WHEN currency = 'USD' THEN amount * 0.95
+        ELSE amount
+    END, 2) AS amount_eur, 
+    currency,
+    channel,
+    transaction_status,
+    dateload
+from renamed
 
 {% if is_incremental() %}
-    WHERE timestamp > (SELECT MAX(timestamp) FROM {{ this }})  -- Condición para la carga incremental
+    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }}) 
 {% endif %}

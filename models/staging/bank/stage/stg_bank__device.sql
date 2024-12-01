@@ -25,7 +25,6 @@ cleaned as (
     from source
 )
 
--- Selección final
 select * from cleaned
 
 {% if is_incremental() %}
