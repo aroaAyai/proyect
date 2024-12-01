@@ -20,39 +20,13 @@ cleaned as (
             when ip_address like '%.%.%.%' then ip_address  -- Asegurar que la IP tenga el formato adecuado
             else null  -- Si no, se marca como NULL
         end as valid_ip,
-        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload,
+        -- Asegurar que la fecha esté en el formato adecuado y en UTC
+        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload
     from source
-
-),
-
-geo_info as (
-
-    select 
-        geo_id  
-    from {{ source('bank','geolocation') }}  -- Tabla de referencia para geolocalización
-),
-
-joined as (
-    select
-        c.device_id,
-        c.device_type,
-        c.valid_ip,
-        c.customer_id,
-        c.dateload,
-        g.geo_id  
-    from cleaned c
-    left join geo_info g
-        on c.geo_id = g.geo_id
-
 )
 
-select 
-    device_id,
-    device_type,
-    valid_ip,
-    customer_id,
-    geo_id  -- Solo devolvemos geo_id
-from joined
+-- Selección final
+select * from cleaned
 
 {% if is_incremental() %}
     WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})

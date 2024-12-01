@@ -1,0 +1,57 @@
+version: 2
+
+sources:
+  - name: google_sheets # Nombre de la fuente
+    description: "Fuente de datos de Google Sheets que contiene información sobre clientes."
+    database: BANK_AROA_BRONZE # Base de datos en Snowflake
+    schema: GOOGLE_SHEETS # Esquema dentro de la base de datos
+    freshness:
+      warn_after: { count: 24, period: day }
+      error_after: { count: 48, period: day }
+
+    tables:
+      - name: customers # Nombre de la tabla
+        description: "Información sobre los clientes almacenada en Google Sheets."
+        columns:
+          - name: customer_id
+            description: "ID único del cliente."
+            tests:
+              - unique
+              - not_null
+          - name: email
+            description: "Correo electrónico del cliente."
+            tests:
+              - not_null
+              - email_format
+          - name: total_spent
+            description: "Monto total gastado por el cliente."
+            tests:
+              - not_null
+          - name: country
+            description: "País de residencia del cliente."
+            tests:
+              - not_null
+          - name: registration_date
+            description: "Fecha de registro del cliente en el sistema."
+            tests:
+              - not_null
+          - name: gender
+            description: "Género del cliente."
+          - name: date_of_birth
+            description: "Fecha de nacimiento del cliente."
+            tests:
+              - not_null
+          - name: is_vip
+            description: "Indica si el cliente es VIP (Sí/No)."
+          - name: name
+            description: "Nombre completo del cliente."
+            tests:
+              - not_null
+          - name: average_transaction
+            description: "Promedio de transacciones realizadas por el cliente."
+          - name: phone_number
+            description: "Número de teléfono del cliente."
+          - name: _fivetran_synced
+            description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null

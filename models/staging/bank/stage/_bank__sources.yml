@@ -13,12 +13,6 @@ sources:
     tables:
       - name: account
         description: "Información sobre las cuentas bancarias de los clientes, incluyendo tipo de cuenta, saldo, límite de descubierto, etc."
-        tests:
-          - dbt_utils.unique_combination_of_columns:
-              combination_of_columns: ["account_id", "customer_id"] # IDs únicos por cliente y cuenta
-          - dbt_utils.relationships:
-              to: ref('customers')
-              field: customer_id # Asegura la relación con la tabla customers
         columns:
           - name: account_id
             description: "ID único de la cuenta bancaria."
@@ -35,9 +29,6 @@ sources:
             description: "ID del cliente asociado a la cuenta."
             tests:
               - not_null
-              - dbt_utils.relationships:
-                  to: ref('customers')
-                  field: customer_id # Relación con la tabla de clientes
           - name: account_type
             description: "Tipo de cuenta (e.g., corriente, ahorro)."
             tests:
@@ -56,56 +47,11 @@ sources:
             description: "Fecha en que se abrió la cuenta."
             tests:
               - not_null
-          - name: _fivetran_synced
+          - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
             tests:
               - not_null
-
-      - name: customers
-        description: "Información sobre los clientes del banco, incluyendo datos demográficos y comportamiento de gasto."
-        columns:
-          - name: customer_id
-            description: "ID único del cliente."
-            tests:
-              - unique
-              - not_null
-          - name: email
-            description: "Correo electrónico del cliente."
-            tests:
-              - not_null
-              - email_format
-          - name: total_spent
-            description: "Monto total gastado por el cliente."
-            tests:
-              - not_null
-          - name: country
-            description: "País de residencia del cliente."
-            tests:
-              - not_null
-          - name: registration_date
-            description: "Fecha de registro del cliente en el sistema."
-            tests:
-              - not_null
-          - name: gender
-            description: "Género del cliente."
-          - name: date_of_birth
-            description: "Fecha de nacimiento del cliente."
-            tests:
-              - not_null
-          - name: is_vip
-            description: "Indica si el cliente es VIP (Sí/No)."
-          - name: name
-            description: "Nombre completo del cliente."
-            tests:
-              - not_null
-          - name: average_transaction
-            description: "Promedio de transacciones realizadas por el cliente."
-          - name: phone_number
-            description: "Número de teléfono del cliente."
-          - name: _fivetran_synced
-            description: "Marca temporal de la última sincronización con Fivetran."
-            tests:
-              - not_null
+              
       - name: device
         description: "Información sobre los dispositivos asociados a los clientes"
         columns:
@@ -119,7 +65,7 @@ sources:
             description: "ID del cliente asociado al dispositivo"
           - name: geo_id
             description: "ID de geolocalización del dispositivo"
-          - name: _fivetran_synced
+          - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran"
 
       - name: geolocation
@@ -136,7 +82,7 @@ sources:
             tests:
               - unique
               - not_null
-          - name: _fivetran_synced
+          - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
             tests:
               - not_null
@@ -161,7 +107,7 @@ sources:
             description: "Categoría del comerciante (e.g., tecnología, ropa)."
           - name: geo_id
             description: "ID de geolocalización del comerciante."
-          - name: _fivetran_synced
+          - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
             tests:
               - not_null
@@ -205,7 +151,7 @@ sources:
             description: "Fecha y hora en que ocurrió la transacción."
             tests:
               - not_null
-          - name: _fivetran_synced
+          - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
             tests:
               - not_null

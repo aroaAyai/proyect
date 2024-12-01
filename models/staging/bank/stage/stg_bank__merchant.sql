@@ -10,15 +10,15 @@ source as (
 ),
 
 renamed as (
-    select
+    SELECT
         merchant_id,
         merchant_name,
         merchant_category,
-        merchant_risk_score,
+        CAST(TRUNCATE(merchant_risk_score, 0) AS INT) AS merchant_risk_score, 
         geo_id,
         average_sale,
-        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload 
-    from source
+        CONVERT_TIMEZONE('UTC', _fivetran_synced) AS dateload
+    FROM source
     order by merchant_id asc
 )
 
@@ -26,5 +26,5 @@ select *
 from renamed
 
 {% if is_incremental() %}
-    WHERE datetime_load_utc > (SELECT MAX(datetime_load_utc) FROM {{ this }})
+    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})
 {% endif %}
