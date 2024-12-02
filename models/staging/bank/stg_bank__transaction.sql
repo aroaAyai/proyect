@@ -17,6 +17,8 @@ renamed as (
             WHEN channel IS NULL THEN 'Online' 
             ELSE channel  
         END AS channel, 
+        transaction_date,
+        customer_id,
         CASE 
             WHEN transaction_status IS NULL THEN 'No aceptada' 
             ELSE transaction_status  
@@ -29,6 +31,7 @@ renamed as (
 select 
     transaction_id,
     account_id,
+    transaction_date,
     merchant_id,
     device_id,
     transaction_type,
@@ -38,6 +41,7 @@ select
         ELSE amount
     END, 2) AS amount_eur, 
     channel,
+    customer_id,
     transaction_status,
     dateload
 from renamed

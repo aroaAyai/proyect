@@ -147,7 +147,7 @@ sources:
             description: "Moneda utilizada para la transacción."
           - name: merchant_rating
             description: "Puntuación del comerciante para la transacción."
-          - name: timestamp
+          - name: transaction_date
             description: "Fecha y hora en que ocurrió la transacción."
             tests:
               - not_null

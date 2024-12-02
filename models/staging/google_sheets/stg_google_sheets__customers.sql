@@ -3,7 +3,7 @@ WITH source AS (
     FROM {{ ref('_base_customers') }} 
 ),
 
-with geolocation_data AS (
+geolocation_data AS (
     SELECT *
     FROM {{ ref('base_geolocation') }}
 ),
