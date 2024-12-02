@@ -37,7 +37,6 @@ select
         WHEN currency = 'USD' THEN amount * 0.95
         ELSE amount
     END, 2) AS amount_eur, 
-    currency,
     channel,
     transaction_status,
     dateload

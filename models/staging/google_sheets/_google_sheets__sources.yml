@@ -1,16 +1,15 @@
 version: 2
 
 sources:
-  - name: google_sheets # Nombre de la fuente
+  - name: google_sheets
     description: "Fuente de datos de Google Sheets que contiene información sobre clientes."
-    database: BANK_AROA_BRONZE # Base de datos en Snowflake
-    schema: GOOGLE_SHEETS # Esquema dentro de la base de datos
+    database: BANK_AROA_BRONZE
+    schema: GOOGLE_SHEETS
     freshness:
       warn_after: { count: 24, period: day }
       error_after: { count: 48, period: day }
-
     tables:
-      - name: customers # Nombre de la tabla
+      - name: customers
         description: "Información sobre los clientes almacenada en Google Sheets."
         columns:
           - name: customer_id
@@ -43,6 +42,8 @@ sources:
               - not_null
           - name: is_vip
             description: "Indica si el cliente es VIP (Sí/No)."
+            tests:
+              - not_null  # Si 'is_vip' no puede ser nulo
           - name: name
             description: "Nombre completo del cliente."
             tests:
@@ -51,7 +52,14 @@ sources:
             description: "Promedio de transacciones realizadas por el cliente."
           - name: phone_number
             description: "Número de teléfono del cliente."
+            tests:
+              - not_null
+              - phone_number_format  # Puedes agregar un formato específico para el teléfono si es necesario
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
+            tests:
+              - not_null
+          - name: geo_id
+            description: "ID geográfico del cliente, relacionado con la tabla de geolocalización."
             tests:
               - not_null
