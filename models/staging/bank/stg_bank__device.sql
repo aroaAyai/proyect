@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT *
-    FROM {{ source('google_sheets', 'customers') }} 
+    FROM {{ ref('base_customers') }} 
 ),
 
 age_calculation AS (
@@ -19,7 +19,6 @@ device_source AS (
 cleaned AS (
     SELECT
         device_id,
-        -- Asigna "SIN DISPOSITIVO" si el tipo de dispositivo es NULL
         CASE 
             WHEN device_type IS NULL THEN 'SIN DISPOSITIVO'
             ELSE UPPER(device_type)  
