@@ -21,6 +21,5 @@ SELECT
     COUNT(device_id) OVER (PARTITION BY geo_id) AS device_count,
     COUNT(CASE WHEN geo_status = 'Muy Sospechosa' THEN 1 END) OVER (PARTITION BY geo_id) AS very_suspect_count,
     COUNT(CASE WHEN geo_status = 'Sospechosa' THEN 1 END) OVER (PARTITION BY geo_id) AS suspect_count,
-    COUNT(CASE WHEN geo_status = 'Válida' THEN 1 END) OVER (PARTITION BY geo_id) AS valid_count
-    FROM previous_geo
+    COUNT(CASE WHEN geo_status = 'Válida' THEN 1 END) OVER (PARTITION BY geo_id) AS valid_count,FROM previous_geo
 ORDER BY geo_id, device_id
