@@ -20,7 +20,7 @@ cleaned as (
         last_activity,
         days_since_last_activity,
         balance_category,
-        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload
+        dateload
     from source
     where round(balance) >= 0
         and date_opened <= '2025-01-01'

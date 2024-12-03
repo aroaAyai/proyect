@@ -21,5 +21,5 @@ LEFT JOIN {{ ref('stg_bank__merchant') }} m
 
 
 {% if is_incremental() %}
-    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }}) 
+    WHERE time_key > (SELECT MAX(time_key) FROM {{ this }}) 
 {% endif %}

@@ -34,11 +34,24 @@ clean-targets: # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
+  +transient: false
   bank_bronze:
     staging:
       +materialized: view
+      +database: DBT_SILVER_AROA
+
+      bank:
+        +schema: bank_aroa_bronze
+      google_sheets:
+        +schema: google_sheets
+
     marts:
       +materialized: table
+      +database: DBT_GOLD_AROA
       core:
         +schema: core
+      fraudulent:
+        +schema: fraudulent
+      analysis:
+        +schema: analysis
 
