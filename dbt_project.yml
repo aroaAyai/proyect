@@ -35,10 +35,10 @@ clean-targets: # directories to be removed by `dbt clean`
 
 models:
   bank_bronze:
-    # Applies to all files under models/example/
     staging:
       +materialized: view
     marts:
       +materialized: table
       core:
         +schema: core
+

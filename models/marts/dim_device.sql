@@ -6,21 +6,18 @@
 with 
 source as (
     select * 
-    from {{ source('bank', 'device') }} 
+    from {{ ref('stg_bank__device') }} 
 ),
 
 cleaned as (
     select
         device_id,
-        upper(device_type) as device_type,  
+        device_type,  
         ip_address,
         customer_id,
         geo_id,
-        case 
-            when ip_address like '%.%.%.%' then ip_address  
-            else null  
-        end as valid_ip,
-        CONVERT_TIMEZONE('UTC', _fivetran_synced) as dateload
+        valid_ip,
+        dateload
     from source
 )
 
