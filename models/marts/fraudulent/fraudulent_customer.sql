@@ -51,7 +51,7 @@ customer_risk_indicators AS (
             ELSE 'Válida'
         END AS geo_mismatch_status,
         CASE 
-            WHEN s.phone_validation_status = 'INVALID' OR s.phone_validation_status IS NULL THEN 'Sospechosa' -- Teléfono no validado o NULL
+            WHEN s.phone_validation_status = 'INVALID' THEN 'Sospechosa' -- Teléfono no validado
             ELSE 'Válida'
         END AS phone_validation_status
     FROM source s
@@ -86,4 +86,4 @@ SELECT
     total_risk,
     risk_classification
 FROM customer_risk_classification
-ORDER BY total_risk DESC
+ORDER BY total_risk asc
