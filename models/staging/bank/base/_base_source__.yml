@@ -21,3 +21,21 @@ models:
         description: "Última actividad registrada de la cuenta"
       - name: _fivetran_synced
         description: "Marca de sincronización de Fivetran"
+  - name: geolocation
+    description: "Información geográfica asociada a los dispositivos, incluyendo si es un proxy."
+    columns:
+      - name: country
+        description: "País desde el que se accede al dispositivo."
+      - name: city
+        description: "Ciudad desde la que se accede al dispositivo."
+      - name: is_proxy
+        description: "Indica si la conexión proviene de un servidor proxy."
+      - name: geo_id
+        description: "ID único de geolocalización."
+        tests:
+          - unique
+          - not_null
+      - name: dateload
+        description: "Marca temporal de la última sincronización con Fivetran."
+        tests:
+          - not_null

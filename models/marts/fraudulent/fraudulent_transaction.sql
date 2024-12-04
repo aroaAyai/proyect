@@ -28,9 +28,7 @@ WITH source AS (
         LEFT JOIN {{ ref('dim_device') }} d ON t.customer_id = d.customer_id
         LEFT JOIN {{ ref('dim_geolocation') }} g ON t.geo_id = g.geo_id
         WHERE t.transaction_id IS NOT NULL
-        {% if is_incremental() %}
-         AND  time_key > (SELECT MAX(time_key) FROM {{ this }})
-        {% endif %}
+
         QUALIFY ROW_NUMBER() OVER (PARTITION BY t.transaction_id ORDER BY t.transaction_date DESC) = 1
 
     

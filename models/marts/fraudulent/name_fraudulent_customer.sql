@@ -7,7 +7,7 @@ WITH source AS (
     SELECT 
         t.customer_id,
         t.name,
-        t.risk_classification  -- Asegúrate de que este campo esté disponible en la fuente de datos
+        t.risk_classification 
     FROM {{ ref('fraudulent_customer') }} t
     {% if is_incremental() %}
       AND t.time_key > (SELECT MAX(time_key) FROM {{ this }})

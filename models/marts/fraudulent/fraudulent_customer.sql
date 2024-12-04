@@ -20,9 +20,7 @@ WITH source AS (
     LEFT JOIN {{ ref('dim_customer') }} c ON t.customer_id = c.customer_id
     LEFT JOIN {{ ref('dim_geolocation') }} g ON t.geo_id = g.geo_id
     WHERE t.transaction_id IS NOT NULL
-    {% if is_incremental() %}
-      AND t.time_key > (SELECT MAX(time_key) FROM {{ this }})
-    {% endif %}
+
 ),
 
 transaction_stats AS (

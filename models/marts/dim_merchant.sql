@@ -14,16 +14,16 @@ renamed as (
         merchant_id,
         merchant_name,
         merchant_category,
-        merchant_risk_score,         
+        CAST(ROUND(merchant_risk_score) AS INT) AS merchant_risk_score, -- Corregido el casting
         geo_id,
         dateload,
         average_sale
     FROM source
+    {% if is_incremental() %}
+    where dateload > (select max(dateload) from {{ this }})
+    {% endif %}
+
 )
 
 select * 
 from renamed
-
-{% if is_incremental() %}
-    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})
-{% endif %}

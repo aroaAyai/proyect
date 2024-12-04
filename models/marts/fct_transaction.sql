@@ -51,5 +51,5 @@ SELECT
     ROUND(AVG(amount_usd), 2) AS avg_amount_usd,
     ROUND(AVG(amount_eur), 2) AS avg_amount_eur 
 FROM transactions 
-GROUP BY country  -- Agrupar solo por el país
+GROUP BY country
 ORDER BY total_amount_usd DESC
