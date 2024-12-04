@@ -1,6 +1,5 @@
 {{ config(
-    materialized='incremental',
-    unique_key='customer_id'
+    materialized='table',
 ) }}
 
 WITH source AS (
@@ -9,15 +8,12 @@ WITH source AS (
         t.name,
         t.risk_classification 
     FROM {{ ref('fraudulent_customer') }} t
-    {% if is_incremental() %}
-      AND t.time_key > (SELECT MAX(time_key) FROM {{ this }})
-    {% endif %}
 )
 
 SELECT 
     customer_id, 
     name,
-    'Fraude' AS fraudulencia  
+    'Posible fraude' AS fraudulencia  
 FROM source
 WHERE risk_classification = 'Sospecha moderada'
 GROUP BY customer_id, name 

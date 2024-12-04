@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: avg_proxy_transaction
+    description: "Modelo para analizar transacciones realizadas a través de proxies, incluyendo métricas agregadas."
+    columns:
+      - name: transaction_id
+        description: "Identificador único de la transacción."
+      - name: customer_id
+        description: "Identificador único del cliente."
+      - name: is_proxy
+        description: "Indica si la transacción fue realizada a través de un proxy."
+      - name: total_transactions
+        description: "Número total de transacciones realizadas a través de proxies."
+      - name: total_amount_usd
+        description: "Monto total en USD de transacciones realizadas a través de proxies."
+      - name: avg_transaction_amount_usd
+        description: "Monto promedio en USD de las transacciones realizadas a través de proxies."
+      - name: avg_amount_eur
+        description: "Monto promedio en EUR de las transacciones realizadas a través de proxies."
+
+  - name: merchant_risk_country
+    description: "Modelo para calcular la cantidad de comercios de alto riesgo por país y clasificar el país más riesgoso."
+    columns:
+      - name: merchant_id
+        description: "Identificador único del comercio."
+      - name: country
+        description: "País donde se encuentra el comercio."
+      - name: high_risk_merchants_count
+        description: "Cantidad de comercios con puntajes de riesgo mayores a 80."
+      - name: rank
+        description: "Posición del país en términos de cantidad de comercios de alto riesgo."
+
+
+  - name: fraudulent_account
+    description: "Modelo para clasificar el riesgo de las cuentas bancarias según su saldo, inactividad y límite de sobregiro."
+    config:
+      materialized: incremental
+      unique_key: account_id
+    columns:
+      - name: account_id
+        description: "Identificador único de la cuenta bancaria."
+      - name: balance_status
+        description: "Estado del saldo de la cuenta ('Sospechosa' o 'Válida')."
+      - name: inactivity_status
+        description: "Estado de inactividad de la cuenta ('Muy Sospechosa', 'Sospechosa' o 'Válida')."
+      - name: overdraft_status
+        description: "Estado del límite de sobregiro ('Sospechosa' o 'Válida')."
+      - name: total_risk
+        description: "Puntaje acumulado de riesgo para la cuenta."
+      - name: risk_classification
+        description: "Clasificación final de riesgo ('Sin sospecha', 'Sospecha leve', 'Sospecha moderada', 'Fraude')."
+
+  - name: fraudulent_customer
+    description: "Modelo para clasificar el riesgo de los clientes según sus transacciones, país y estado del teléfono."
+    config:
+      materialized: incremental
+      unique_key: customer_id
+    columns:
+      - name: customer_id
+        description: "Identificador único del cliente."
+      - name: transaction_volume_status
+        description: "Estado del volumen de transacciones ('Sospechosa' o 'Válida')."
+      - name: geo_mismatch_status
+        description: "Estado de discrepancia geográfica ('Sospechosa' o 'Válida')."
+      - name: phone_validation_status
+        description: "Estado de validación del teléfono ('Sospechosa' o 'Válida')."
+      - name: total_risk
+        description: "Puntaje acumulado de riesgo para el cliente."
+      - name: risk_classification
+        description: "Clasificación final de riesgo ('Normal', 'Sospecha leve', 'Sospecha moderada', 'Fraude')."
+
+  - name: fraudulent_transaction
+    description: "Modelo para clasificar el riesgo de las transacciones según anomalías de monto, frecuencia y uso de proxy."
+    config:
+      materialized: incremental
+      unique_key: transaction_id
+    columns:
+      - name: transaction_id
+        description: "Identificador único de la transacción."
+      - name: amount_status
+        description: "Estado del monto de la transacción ('Sospechosa' o 'Válida')."
+      - name: frequency_status
+        description: "Estado de frecuencia de la transacción ('Sospechosa' o 'Válida')."
+      - name: proxy_status
+        description: "Estado de uso de proxy para la transacción ('Sospechosa' o 'Válida')."
+      - name: final_status
+        description: "Clasificación final de la transacción ('Normal', 'Sospecha', 'Fraude')."
+
+  - name: name_fraudulent_customer
+    description: "Modelo incremental para identificar clientes fraudulentos basándose en sus clasificaciones de riesgo."
+    config:
+      materialized: incremental
+      unique_key: customer_id
+    columns:
+      - name: customer_id
+        description: "Identificador único del cliente."
+      - name: name
+        description: "Nombre del cliente identificado como fraudulento."
+      - name: fraudulencia
+        description: "Etiqueta indicando si el cliente tiene riesgo de fraude ('Fraude')."

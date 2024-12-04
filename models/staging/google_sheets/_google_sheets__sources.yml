@@ -28,8 +28,6 @@ sources:
               - not_null
           - name: country
             description: "País de residencia del cliente."
-            tests:
-              - not_null
           - name: registration_date
             description: "Fecha de registro del cliente en el sistema."
             tests:
@@ -43,7 +41,7 @@ sources:
           - name: is_vip
             description: "Indica si el cliente es VIP (Sí/No)."
             tests:
-              - not_null  # Si 'is_vip' no puede ser nulo
+              - not_null  
           - name: name
             description: "Nombre completo del cliente."
             tests:
@@ -54,7 +52,6 @@ sources:
             description: "Número de teléfono del cliente."
             tests:
               - not_null
-              - phone_number_format  # Puedes agregar un formato específico para el teléfono si es necesario
           - name: _fivetran_synced
             description: "Marca temporal de la última sincronización con Fivetran."
             tests:

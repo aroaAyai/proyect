@@ -23,14 +23,14 @@ SELECT
     monthname(date_day) AS desc_month,
     year(date_day) * 100 + month(date_day) AS id_anio_mes,
     quarter(date_day) AS quarter,
-    date_day - 1 AS dia_previo,  -- El día previo
+    date_day - 1 AS dia_previo, 
     concat(year(date_day), weekiso(date_day), dayofweek(date_day)) AS anio_semana_dia,
     weekiso(date_day) AS semana_anio,
     dayofweek(date_day) AS day_of_week_number,
     dayname(date_day) AS day_of_week_name,
     dayofyear(date_day) AS day_of_year,
     CASE 
-        WHEN dayofweek(date_day) IN (6, 7) THEN 'Sí'  -- Fin de semana
+        WHEN dayofweek(date_day) IN (6, 7) THEN 'Sí'
         ELSE 'No' 
     END AS is_weekend,
     current_timestamp AS current_time,  -- Fecha y hora actuales

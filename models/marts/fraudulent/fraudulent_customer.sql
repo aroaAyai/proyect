@@ -1,6 +1,5 @@
 {{ config(
-    materialized='incremental',
-    unique_key='customer_id'
+    materialized='table',
 ) }}
 
 WITH source AS (
@@ -13,7 +12,7 @@ WITH source AS (
         c.country AS customer_country,
         c.registration_date,
         c.phone_validation_status,
-        g.country AS geo_country,  -- Cambio a 'g.country'
+        g.country AS geo_country,
         g.is_proxy,
         c.age_years
     FROM {{ ref('fct_transaction') }} t
@@ -41,15 +40,15 @@ customer_risk_indicators AS (
         s.registration_date,
         t.transaction_count,
         CASE 
-            WHEN t.transaction_count > 2 THEN 'Sospechosa' -- Clientes con muchas transacciones
+            WHEN t.transaction_count > 2 THEN 'Sospechosa' 
             ELSE 'Válida'
         END AS transaction_volume_status,
         CASE 
-            WHEN s.customer_country != s.geo_country THEN 'Sospechosa' -- Discrepancia de país
+            WHEN s.customer_country != s.geo_country THEN 'Sospechosa'
             ELSE 'Válida'
         END AS geo_mismatch_status,
         CASE 
-            WHEN s.phone_validation_status = 'INVALID' THEN 'Sospechosa' -- Teléfono no validado
+            WHEN s.phone_validation_status = 'INVALID' THEN 'Sospechosa' 
             ELSE 'Válida'
         END AS phone_validation_status
     FROM source s

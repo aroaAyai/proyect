@@ -1,6 +1,5 @@
 {{ config(
-    materialized='incremental',
-    unique_key='merchant_id'
+    materialized='table',
 ) }}
 
 with 
@@ -14,7 +13,7 @@ renamed as (
         merchant_id,
         merchant_name,
         CASE 
-            WHEN merchant_category IS NULL THEN 'sin categoria'
+            WHEN merchant_category IS NULL THEN 'Sin categoria'
             ELSE merchant_category
         END AS merchant_category,
         merchant_risk_score,         
@@ -27,8 +26,3 @@ renamed as (
 
 select * 
 from renamed
-
-{% if is_incremental() %}
-    -- Filtrar solo los registros nuevos o actualizados
-    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})
-{% endif %}

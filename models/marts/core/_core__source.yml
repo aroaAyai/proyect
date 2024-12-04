@@ -1,0 +1,132 @@
+version: 2
+
+models:
+  - name: dim_account
+    description: "Dimensión de cuentas bancarias, incluyendo información de estado, tipo, y actividad."
+    columns:
+      - name: account_id
+        description: "Identificador único de la cuenta."
+      - name: account_status
+        description: "Estado actual de la cuenta."
+      - name: account_type
+        description: "Tipo de cuenta (e.g., corriente, ahorro)."
+      - name: date_opened
+        description: "Fecha en que se abrió la cuenta."
+      - name: overdraft_limit
+        description: "Límite de sobregiro permitido para la cuenta."
+      - name: balance
+        description: "Saldo actual de la cuenta."
+      - name: last_activity
+        description: "Fecha de la última actividad en la cuenta."
+      - name: days_since_last_activity
+        description: "Días transcurridos desde la última actividad."
+      - name: balance_category
+        description: "Categoría del saldo (alto, medio, bajo)."
+      - name: dateload
+        description: "Fecha y hora de la última carga de datos."
+
+  - name: dim_customer
+    description: "Dimensión de clientes, con información personal y de registro."
+    columns:
+      - name: customer_id
+        description: "Identificador único del cliente."
+      - name: name
+        description: "Nombre completo del cliente."
+      - name: country
+        description: "País de residencia del cliente."
+      - name: gender
+        description: "Género del cliente."
+      - name: phone_number
+        description: "Número de teléfono del cliente."
+      - name: registration_date
+        description: "Fecha de registro del cliente."
+      - name: total_spent
+        description: "Monto total gastado por el cliente."
+      - name: date_of_birth
+        description: "Fecha de nacimiento del cliente."
+      - name: email
+        description: "Correo electrónico del cliente."
+      - name: phone_validation_status
+        description: "Estado de validación del número de teléfono."
+      - name: age_years
+        description: "Edad del cliente en años."
+
+  - name: dim_device
+    description: "Dimensión de dispositivos utilizados por los clientes, con validaciones y recuentos."
+    columns:
+      - name: device_id
+        description: "Identificador único del dispositivo."
+      - name: device_type
+        description: "Tipo de dispositivo (e.g., móvil, tableta)."
+      - name: customer_id
+        description: "Identificador del cliente asociado al dispositivo."
+      - name: geo_id
+        description: "Identificador geográfico del dispositivo."
+      - name: valid_ip
+        description: "IP válida asociada al dispositivo."
+      - name: geo_status
+        description: "Estado geográfico del dispositivo."
+      - name: dateload
+        description: "Fecha y hora de la última carga de datos."
+      - name: device_count
+        description: "Recuento total de dispositivos."
+      - name: very_suspect_count
+        description: "Recuento de dispositivos altamente sospechosos."
+      - name: suspect_count
+        description: "Recuento de dispositivos sospechosos."
+      - name: valid_count
+        description: "Recuento de dispositivos válidos."
+
+  - name: dim_geolocation
+    description: "Dimensión geográfica para ubicación de clientes y dispositivos."
+    columns:
+      - name: geo_id
+        description: "Identificador único de la ubicación geográfica."
+      - name: country
+        description: "País de la ubicación."
+      - name: city
+        description: "Ciudad de la ubicación."
+      - name: is_proxy
+        description: "Indica si la ubicación es un proxy (true/false)."
+      - name: dateload
+        description: "Fecha y hora de la última carga de datos."
+
+  - name: dim_merchant
+    description: "Dimensión de comerciantes, con información de categoría, puntuación de riesgo y ventas promedio."
+    columns:
+      - name: merchant_id
+        description: "Identificador único del comerciante."
+      - name: merchant_name
+        description: "Nombre del comerciante."
+      - name: merchant_category
+        description: "Categoría del comerciante."
+      - name: merchant_risk_score
+        description: "Puntuación de riesgo asignada al comerciante."
+      - name: geo_id
+        description: "Identificador geográfico del comerciante."
+      - name: dateload
+        description: "Fecha y hora de la última carga de datos."
+      - name: average_sale
+        description: "Promedio de ventas realizadas por el comerciante."
+
+  - name: fct_transaction
+    description: "Tabla de hechos que registra transacciones, incluyendo montos y detalles geográficos."
+    columns:
+      - name: transaction_id
+        description: "Identificador único de la transacción."
+      - name: merchant_id
+        description: "Identificador del comerciante asociado a la transacción."
+      - name: amount_usd
+        description: "Monto de la transacción en dólares estadounidenses."
+      - name: amount_eur
+        description: "Monto de la transacción en euros."
+      - name: transaction_date
+        description: "Fecha en que se realizó la transacción."
+      - name: geo_id
+        description: "Identificador geográfico asociado a la transacción."
+      - name: customer_id
+        description: "Identificador del cliente asociado a la transacción."
+      - name: time_key
+        description: "Clave de tiempo para la transacción."
+      - name: merchant_category
+        description: "Categoría del comerciante en la transacción."

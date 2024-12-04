@@ -38,20 +38,19 @@ models:
   bank_bronze:
     staging:
       +materialized: view
-      +database: DBT_SILVER_AROA
-
+      +database: DBT_SILVER_AROA_PRO
       bank:
-        +schema: bank_aroa_bronze
+        +schema: silver
       google_sheets:
-        +schema: google_sheets
+        +schema: silver
 
     marts:
       +materialized: table
-      +database: DBT_GOLD_AROA
+      +database: DBT_GOLD_AROA_PRO
       core:
-        +schema: core
+        +schema: gold
       fraudulent:
         +schema: fraudulent
-      analysis:
-        +schema: analysis
+      business:
+        +schema: business
 

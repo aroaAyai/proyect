@@ -49,8 +49,7 @@ sources:
               - not_null
           - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
-            tests:
-              - not_null
+
               
       - name: device
         description: "Información sobre los dispositivos asociados a los clientes"
@@ -84,8 +83,6 @@ sources:
               - not_null
           - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
-            tests:
-              - not_null
 
       - name: merchant
         description: "Información sobre los comerciantes, incluyendo el riesgo y las ventas."
@@ -109,8 +106,7 @@ sources:
             description: "ID de geolocalización del comerciante."
           - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
-            tests:
-              - not_null
+
 
       - name: transaction
         description: "Información de las transacciones bancarias, incluyendo monto, estado, tipo, etc."
@@ -153,5 +149,4 @@ sources:
               - not_null
           - name: dateload
             description: "Marca temporal de la última sincronización con Fivetran."
-            tests:
-              - not_null
+

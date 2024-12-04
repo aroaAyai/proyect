@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: transaction_country
+    description: "Modelo para calcular métricas agregadas de transacciones internacionales por país."
+    columns:
+      - name: country
+        description: "País donde se realizaron las transacciones."
+      - name: total_transactions
+        description: "Número total de transacciones internacionales realizadas."
+      - name: total_spent_usd
+        description: "Monto total en USD gastado en transacciones internacionales."
+      - name: avg_transaction_value
+        description: "Valor promedio en USD de las transacciones internacionales."
+
+  - name: transaction_month
+    description: "Modelo para analizar métricas mensuales de transacciones, como cantidad, total y promedio de montos."
+    columns:
+      - name: transaction_year
+        description: "Año en que se realizó la transacción."
+      - name: transaction_month
+        description: "Mes en que se realizó la transacción."
+      - name: total_transactions_month
+        description: "Número total de transacciones realizadas en el mes."
+      - name: total_amount_month_usd
+        description: "Monto total en USD de las transacciones realizadas en el mes."
+      - name: avg_amount_month_usd
+        description: "Monto promedio en USD de las transacciones realizadas en el mes."
+      - name: total_amount_month_eur
+        description: "Monto total en EUR de las transacciones realizadas en el mes."
+      - name: avg_amount_month_eur
+        description: "Monto promedio en EUR de las transacciones realizadas en el mes."
+
+  - name: transaction_by_days
+    description: "Modelo para analizar métricas diarias de transacciones por día de la semana."
+    columns:
+      - name: transaction_year
+        description: "Año en que se realizó la transacción."
+      - name: day_of_week_name
+        description: "Nombre del día de la semana en que se realizó la transacción."
+      - name: total_transactions_per_day
+        description: "Número total de transacciones realizadas en el día."
+      - name: total_amount_per_day
+        description: "Monto total en USD de las transacciones realizadas en el día."
+      - name: avg_amount_per_day
+        description: "Monto promedio en USD de las transacciones realizadas en el día."
+
+  - name: type_account_transaction
+    description: "Modelo para resumir transacciones totales por estado y tipo de cuenta bancaria."
+    config:
+      materialized: incremental
+      unique_key: account_status_account_type
+    columns:
+      - name: account_status
+        description: "Estado de la cuenta bancaria ('Activa', 'Inactiva', etc.)."
+      - name: account_type
+        description: "Tipo de cuenta bancaria ('Corriente', 'Ahorros', etc.)."
+      - name: total_transactions
+        description: "Número total de transacciones asociadas a este estado y tipo de cuenta."

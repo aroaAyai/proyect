@@ -1,7 +1,7 @@
 with proxy_transactions as (
     select
-        t.transaction_id,
         t.customer_id,
+        t.transaction_id,
         t.amount_usd,
         t.amount_eur,
         g.is_proxy,
