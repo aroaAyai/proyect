@@ -1,3 +1,5 @@
+{{ config(materialized="table") }}
+
 WITH source AS (
     SELECT *
     FROM {{ ref('stg_google_sheets__customers') }} 
@@ -5,32 +7,32 @@ WITH source AS (
 
 data AS (
     SELECT
-        customer_id,            -- Clave primaria de la dimensión
+        customer_id,           
         name,
-        geo_id,                  -- Nombre del cliente
-        country,                -- País del cliente
-        gender,                 -- Género del cliente
-        phone_number,           -- Número de teléfono
-        registration_date,      -- Fecha de registro
-        total_spent,            -- Gasto total
-        date_of_birth,          -- Fecha de nacimiento
-        email,                  -- Correo electrónico
-        phone_validation_status, -- Estado de validación del teléfono
-        age_years               -- Edad del cliente
+        geo_id,             
+        country,        
+        gender,       
+        phone_number,       
+        registration_date,   
+        total_spent,     
+        date_of_birth,      
+        email,
+        phone_validation_status,
+        age_years
     FROM source
-    -- Aquí puedes agregar más transformaciones si las necesitas
+
 )
 
 SELECT
-    customer_id,            -- Clave primaria de la dimensión
-    name,                   -- Nombre del cliente
-    country,                -- País del cliente
-    gender,                 -- Género del cliente
-    phone_number,           -- Número de teléfono
-    registration_date,      -- Fecha de registro
-    total_spent,            -- Gasto total
-    date_of_birth,          -- Fecha de nacimiento
-    email,                  -- Correo electrónico
-    phone_validation_status, -- Estado de validación del teléfono
-    age_years               -- Edad del cliente
+    customer_id,            
+    name,           
+    country,           
+    gender,            
+    phone_number,       
+    registration_date,   
+    total_spent,       
+    date_of_birth,      
+    email,            
+    phone_validation_status, 
+    age_years           
 FROM data

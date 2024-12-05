@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='geo_id'
-) }}
+{{ config(materialized="table") }}
 
 with 
 source as (

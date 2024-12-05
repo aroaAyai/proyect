@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='account_id'
-) }}
+{{ config(materialized="view") }}
 
 with 
 source as (
@@ -20,6 +17,7 @@ cleaned as (
         last_activity,
         days_since_last_activity,
         balance_category,
+        customer_id,
         dateload
     from source
     where round(balance) >= 0
@@ -30,6 +28,4 @@ cleaned as (
 select * 
 from cleaned
 
-{% if is_incremental() %}
-    where dateload > (select max(dateload) from {{ this }})
-{% endif %}
+

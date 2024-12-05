@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT *
-    FROM {{ source('google_sheets', 'customers') }} 
+    FROM {{ ref('customer_timestamp_snp_bronze') }} 
 ),
 
 
@@ -15,7 +15,6 @@ age_calculation AS (
         total_spent,
         date_of_birth,
         email,
-        -- Cálculo de la edad del cliente redondeado (en años)
         ROUND(DATEDIFF('day', date_of_birth, current_date) / 365.0) AS age_years
     FROM source
 )

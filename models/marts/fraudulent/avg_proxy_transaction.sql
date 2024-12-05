@@ -1,3 +1,5 @@
+{{ config(materialized="table") }}
+
 with proxy_transactions as (
     select
         t.customer_id,

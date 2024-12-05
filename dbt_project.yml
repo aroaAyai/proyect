@@ -53,4 +53,7 @@ models:
         +schema: fraudulent
       business:
         +schema: business
-
+snapshots:
+  +transient: false
+  +target_database: DBT_SILVER_AROA_PRO
+  +target_schema: snapshots

@@ -9,6 +9,7 @@ SELECT
     t.amount_eur,
     t.transaction_date,
     c.geo_id,
+    t.account_id,
     c.customer_id,
     TO_CHAR(t.transaction_date, 'YYYYMMDD') AS time_key,
     m.merchant_category

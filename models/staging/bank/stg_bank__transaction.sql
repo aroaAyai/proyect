@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='merchant_id'
-) }}
+{{ config(materialized="view") }}
 
 with 
 source as (
@@ -30,9 +27,6 @@ renamed as (
         END AS transaction_status,
         CONVERT_TIMEZONE('UTC', _fivetran_synced) AS dateload, 
     from source
-    {%if is_incremental() %}
-    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }}) 
-    {% endif %}
     order by transaction_id asc
 )
 

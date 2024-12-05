@@ -1,3 +1,4 @@
+{{ config(materialized="table") }}
 WITH previous_geo AS (
     SELECT 
         d.device_id,

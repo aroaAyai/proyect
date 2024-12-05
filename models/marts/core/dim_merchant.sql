@@ -1,8 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='merchant_id'
-) }}
-
+{{ config(materialized="table") }}
 with 
 source as (
     select * 
@@ -19,9 +15,6 @@ renamed as (
         dateload,
         average_sale
     FROM source
-    {% if is_incremental() %}
-    where dateload > (select max(dateload) from {{ this }})
-    {% endif %}
 
 )
 

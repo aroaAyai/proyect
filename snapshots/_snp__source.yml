@@ -1,0 +1,121 @@
+version: 2
+snapshots:
+  - name: account_timestamp_snp_bronze
+    description: "Snapshot that captures the state of accounts with their last updated timestamps."
+    target_database: DBT_SILVER_AROA
+    target_schema: snapshots
+    unique_key: account_id
+    updated_at: _fivetran_synced
+    strategy: timestamp
+    columns:
+      - name: account_id
+        description: "Unique identifier for each account"
+      - name: account_status
+        description: "Current status of the account (e.g., active, inactive)"
+      - name: overdraft_limit
+        description: "The overdraft limit for the account"
+      - name: balance
+        description: "Current balance in the account"
+      - name: last_activity
+        description: "Timestamp of the last activity in the account"
+      - name: dateload
+        description: "The time the data was synced"
+
+  - name: customer_timestamp_snp_bronze
+    description: "Información sobre los clientes almacenada en Google Sheets."
+    target_database: DBT_SILVER_AROA
+    target_schema: snapshots
+    unique_key: customer_id
+    updated_at: _fivetran_synced
+    strategy: timestamp
+    columns:
+      - name: customer_id
+        description: "ID único del cliente."
+        tests:
+          - unique
+          - not_null
+      - name: email
+        description: "Correo electrónico del cliente."
+        tests:
+          - not_null
+          - email_format
+      - name: total_spent
+        description: "Monto total gastado por el cliente."
+        tests:
+          - not_null
+      - name: country
+        description: "País de residencia del cliente."
+      - name: registration_date
+        description: "Fecha de registro del cliente en el sistema."
+        tests:
+          - not_null
+      - name: gender
+        description: "Género del cliente."
+      - name: date_of_birth
+        description: "Fecha de nacimiento del cliente."
+        tests:
+          - not_null
+      - name: is_vip
+        description: "Indica si el cliente es VIP (Sí/No)."
+        tests:
+          - not_null
+      - name: name
+        description: "Nombre completo del cliente."
+        tests:
+          - not_null
+      - name: average_transaction
+        description: "Promedio de transacciones realizadas por el cliente."
+      - name: phone_number
+        description: "Número de teléfono del cliente."
+        tests:
+          - not_null
+      - name: _fivetran_synced
+        description: "Marca temporal de la última sincronización con Fivetran."
+        tests:
+          - not_null
+      - name: geo_id
+        description: "ID geográfico del cliente, relacionado con la tabla de geolocalización."
+        tests:
+          - not_null
+
+      - name: transaction_timestamp_snp_bronze
+        description: "Información de las transacciones bancarias, incluyendo monto, estado, tipo, etc."
+        columns:
+          - name: transaction_id
+            description: "ID único de la transacción."
+            tests:
+              - unique
+              - not_null
+          - name: amount
+            description: "Monto de la transacción."
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0 # Puedes ajustar el valor mínimo
+                  max_value: 99990 # Los valores deben ser menores o iguales a 0
+          - name: transaction_status
+            description: "Estado de la transacción (completada, fallida, pendiente)."
+            tests:
+              - not_null
+          - name: device_id
+            description: "ID del dispositivo utilizado para la transacción."
+          - name: exchange_rate
+            description: "Tipo de cambio utilizado en la transacción (si aplica)."
+          - name: channel
+            description: "Canal utilizado para la transacción (e.g., en línea, presencial)."
+          - name: merchant_id
+            description: "ID del comerciante donde se realizó la transacción."
+          - name: transaction_type
+            description: "Tipo de transacción (e.g., compra, reembolso)."
+          - name: account_id
+            description: "ID de la cuenta asociada con la transacción."
+          - name: currency
+            description: "Moneda utilizada para la transacción."
+          - name: merchant_rating
+            description: "Puntuación del comerciante para la transacción."
+          - name: transaction_date
+            description: "Fecha y hora en que ocurrió la transacción."
+            tests:
+              - not_null
+          - name: dateload
+            description: "Marca temporal de la última sincronización con Fivetran."

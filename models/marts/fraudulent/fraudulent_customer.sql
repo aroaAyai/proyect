@@ -83,4 +83,3 @@ SELECT
     total_risk,
     risk_classification
 FROM customer_risk_classification
-ORDER BY total_risk asc

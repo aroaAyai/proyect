@@ -1,3 +1,5 @@
+{{ config(materialized="view") }}
+
 WITH source AS (
     SELECT *
     FROM {{ ref('base_customers') }} 
@@ -56,10 +58,4 @@ geo_status_calculation AS (
 
 SELECT *
 FROM geo_status_calculation
--- Lógica incremental
-{% if is_incremental() %}
-WHERE dateload > (
-    SELECT MAX(dateload)
-    FROM {{ this }}
-)
-{% endif %}
+

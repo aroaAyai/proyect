@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='geo_id'
-) }}
+{{ config(materialized="view") }}
 
 with 
 source as (
@@ -22,7 +19,3 @@ renamed as (
 
 select * 
 from renamed
-
-{% if is_incremental() %}
-    WHERE dateload > (SELECT MAX(dateload) FROM {{ this }})
-{% endif %}

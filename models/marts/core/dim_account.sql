@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='account_id'
-) }}
+{{ config(materialized="table") }}
 
 with 
 source as (
@@ -19,6 +16,7 @@ cleaned as (
         balance, 
         last_activity,
         days_since_last_activity,
+        customer_id,
         balance_category,
         dateload
     from source

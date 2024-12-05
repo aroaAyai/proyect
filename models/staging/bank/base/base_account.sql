@@ -1,14 +1,8 @@
-{{ config(
-    materialized='incremental' 
-) }}
-
+{{ config(materialized="view") }}
 with 
 source as (
     select * 
-    from {{ source('bank', 'account') }}
-    {% if is_incremental() %}
-        where CONVERT_TIMEZONE('UTC', _fivetran_synced) > (select max(dateload) from {{ this }}) 
-    {% endif %}
+    from {{ ref('account_timestamp_snp_bronze') }}
 ),
 
 cleaned as (
@@ -20,6 +14,7 @@ cleaned as (
         cast(round(overdraft_limit) as int) as overdraft_limit, 
         cast(round(balance) as int) as balance, 
         last_activity,
+        customer_id,
         greatest(datediff('day', last_activity, '2024-12-31'), 0) as days_since_last_activity, 
         case 
             when round(balance) > 3000 then 'high'

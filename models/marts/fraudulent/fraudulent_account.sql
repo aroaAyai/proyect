@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='account_id'
-) }}
+{{ config(materialized="table") }}
 
 WITH source AS (
     SELECT * 
